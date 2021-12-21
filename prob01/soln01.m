@@ -1,4 +1,4 @@
-%%
+%% problem 1
 fid = fopen('input.txt','rt');
 input = textscan(fid,'%u');
 fclose(fid);
@@ -23,6 +23,12 @@ assert(f(input0) == 7)
 % How many measurements are larger than the previous ones?
 f(input)
 
-%%
+%% problem 2
+% Consider sums of a three-measurement sliding window. How many sums are 
+% larger than the previous sum?
 
+g = @(x) f(movsum(x,3,'Endpoints','discard'));
 
+assert(g(input0) == 5)
+
+g(input)
