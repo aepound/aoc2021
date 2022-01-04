@@ -131,3 +131,54 @@ pwr = g*e
 % What is the life support rating of the submarine? (Be sure to represent
 % your answer in decimal, not binary.)
 
+%%
+
+% This is a tree, essentially. The most straight forward way to do this I 
+% think is a for-loop... 
+
+filteredO2Input = testInput;
+filteredCO2Input= testInput;
+for iter = 1:size(testInput,2)
+  if size(unique(filteredO2Input,'rows'),1) ~= 1
+    oxy = sum(filteredO2Input(:,iter)) >= size(filteredO2Input,1)/2;
+    filteredO2Input(filteredO2Input(:,iter) ~= oxy,:) = [];
+  end
+  if size(unique(filteredCO2Input,'rows'),1) ~= 1
+    co2 = sum(filteredCO2Input(:,iter)) < size(filteredCO2Input,1)/2;
+    filteredCO2Input(filteredCO2Input(:,iter) ~= co2,:) = [];
+  end
+end
+
+b2d = @(x) sum(2.^(((length(x)-1):-1:0).*double(x))) - sum(~double(x));
+
+o2 = b2d(filteredO2Input);
+co2 = b2d(filteredCO2Input);
+lifeSupportRating = o2*co2
+
+assert(lifeSupportRating == 230)
+
+%% Solution:
+fid = fopen('input.txt','rt');
+input = textscan(fid,'%s\n');
+fclose(fid);
+
+c = int32(cat(1,input{1}{:}) - '0');
+
+filteredO2Input = c;
+filteredCO2Input= c;
+for iter = 1:size(c,2)
+  if size(unique(filteredO2Input,'rows'),1) ~= 1
+    oxy = sum(filteredO2Input(:,iter)) >= size(filteredO2Input,1)/2;
+    filteredO2Input(filteredO2Input(:,iter) ~= oxy,:) = [];
+  end
+  if size(unique(filteredCO2Input,'rows'),1) ~= 1
+    co2 = sum(filteredCO2Input(:,iter)) < size(filteredCO2Input,1)/2;
+    filteredCO2Input(filteredCO2Input(:,iter) ~= co2,:) = [];
+  end
+end
+
+b2d = @(x) sum(2.^(((length(x)-1):-1:0).*double(x))) - sum(~double(x));
+
+o2 = b2d(filteredO2Input);
+co2 = b2d(filteredCO2Input);
+lifeSupportRating = o2*co2
